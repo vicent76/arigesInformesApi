@@ -1,6 +1,6 @@
 {
-  "name": "ariagrowebapi",
-  "version": "1.0.6",
+  "name": "arigesInformesapi",
+  "version": "1.0.1",
   "description": "",
   "main": "app.js",
   "scripts": {
