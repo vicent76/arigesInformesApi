@@ -12,9 +12,9 @@ router.get('/test', async (req, res, next) => {
     }
 })
 
-router.get('/', async (req, res, next) => {
+router.get('/:codusu', async (req, res, next) => {
     try {
-        result = await empresas_mysql.empresa()
+        result = await empresas_mysql.empresa(req.params.codusu)
         return res.json(result)
     } catch (error) {
         next(error)
