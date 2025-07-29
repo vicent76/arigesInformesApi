@@ -20,6 +20,7 @@ const appServer = {
         app.use('/api/version', require('./api/version/version_controlador'));
         app.use('/api/usuarios', require('./api/usuarios/usuarios_controlador'));
         app.use('/api/empresas', require('./api/empresas/empresas_controlador'));
+        app.use('/api/agentes', require('./api/agentes/agentes_controlador'));
 
         //
         app.use('/api/productos', require('./api/productos/productos_controlador'));
