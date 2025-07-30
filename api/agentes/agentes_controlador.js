@@ -15,7 +15,7 @@ router.get('/test', async (req, res, next) => {
 router.get('/:codagent/:empresa', async (req, res, next) => {
     try {
         let [result] = await agentes_mysql.agente(req.params.codagent, req.params.empresa)
-        return res.json(result[0])
+        return res.json(result)
     } catch (error) {
         next(error)
     }

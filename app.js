@@ -48,7 +48,8 @@ const appServer = {
     lanzarServidor: ()=>{
         winston.warn('Lanzar Servidor');
         const port = process.env.ARAW_PORT || 49170
-        winston.warn(`Servidor ARIPRESWEB-API escuchando en puerto: ${port}`)
+        winston.warn(`Servidor ARIGESINFORMES-API escuchando en puerto: ${port}`);
+        console.log(`Servidor ARIGESINFORMES-API escuchando en puerto: ${port}`);
        app.listen(port, () => {})
     }
 }

@@ -12,9 +12,9 @@ router.get('/test', async (req, res, next) => {
     }
 })
 
-router.post('/', async (req, res, next) => {
+router.post('/:empresa', async (req, res, next) => {
     try {
-        result = await comparativa_mysql.datos_comparativa(req.body)
+        result = await comparativa_mysql.datos_comparativa(req.body, req.params.empresa)
         return res.json(result)
     } catch (error) {
         next(error)
