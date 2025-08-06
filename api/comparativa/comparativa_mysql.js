@@ -35,6 +35,7 @@ const recuperaSql = function(data) {
     let sql = '';
     if(!data.anyoAnterior) {
         sql = `SELECT 
+              '${data.nomEmpre}' AS nomempre,
               YEAR(sc.fecfactu) AS anyo,
               MONTH(sc.fecfactu) AS num_mes, 
               MONTHNAME(sc.fecfactu) AS nombre_mes, 
@@ -49,6 +50,7 @@ const recuperaSql = function(data) {
               SUM(COALESCE(sc.baseimp4, 0)) + 
               SUM(COALESCE(sc.baseimp5, 0)) AS total_mes_agente, 
               tmp.total_mes AS total_mes, 
+              sa.nomagent as nomagent,
               ROUND(( 
                 (SUM(COALESCE(sc.baseimp1, 0)) + 
                  SUM(COALESCE(sc.baseimp2, 0)) + 
@@ -57,6 +59,7 @@ const recuperaSql = function(data) {
                  SUM(COALESCE(sc.baseimp5, 0))) / NULLIF(tmp.total_mes, 0) 
               ) * 100, 2) AS porcentaje_agente 
             FROM scafac AS sc 
+            LEFT JOIN sagent as sa on sa.codagent = sc.codagent
             LEFT JOIN ( 
               SELECT 
                 MONTH(sc.fecfactu) AS num_mes, 
@@ -75,6 +78,7 @@ const recuperaSql = function(data) {
             ORDER BY num_mes`
     } else {
                         sql = `SELECT
+                        '${data.nomEmpre}' AS nomempre,
                         m.num_mes,
                         MONTHNAME(STR_TO_DATE(m.num_mes, '%m')) AS nombre_mes,
 
