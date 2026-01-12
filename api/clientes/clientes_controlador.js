@@ -21,5 +21,23 @@ router.get('/', async (req, res, next) => {
     }
 })
 
+router.get('/codigo/:codclien/em/:empresa', async (req, res, next) => {
+    try {
+        result = await clientes_mysql.cliente_codigo(req.params.codclien, req.params.empresa)
+        return res.json(result)
+    } catch (error) {
+        next(error)
+    }
+})
+
+router.get('/telefonos/:empresa', async (req, res, next) => {
+    try {
+        result = await clientes_mysql.todos_clientes_telefonos(req.params.empresa)
+        return res.json(result)
+    } catch (error) {
+        next(error)
+    }
+})
+
 
 module.exports = router
