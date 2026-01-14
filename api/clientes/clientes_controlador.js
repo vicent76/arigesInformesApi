@@ -39,5 +39,14 @@ router.get('/telefonos/:empresa', async (req, res, next) => {
     }
 })
 
+router.get('/telefonos/vencidos/:empresa', async (req, res, next) => {
+    try {
+        result = await clientes_mysql.todos_clientes_telefonos_vencidos(req.params.empresa)
+        return res.json(result)
+    } catch (error) {
+        next(error)
+    }
+})
+
 
 module.exports = router

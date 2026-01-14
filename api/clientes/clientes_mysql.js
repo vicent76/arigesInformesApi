@@ -71,6 +71,41 @@ const clientes_mysql = {
             }
             throw (error)
         }
+    },
+
+     todos_clientes_telefonos_vencidos: async (empresa) => {
+        let conn = undefined
+        try {
+            let cfg = await connector.empresa(empresa)
+            conn = await mysql.createConnection(cfg)
+            let sql = `SELECT 
+                t.codclien,
+                c.nomclien,
+                t.IdTelefono,
+                t.Observaciones,
+                t.operador,
+                o.nombre AS operadorNombre,
+                o.mesesRenovacion AS mesesRenovacion,
+                t.modelo,
+                m.descripcion AS modeloNombre,
+                t.PlazosMeses,
+                t.ImportePlazo,
+                t.PlazosOrigen,
+                DATE_ADD(t.fecharenove, INTERVAL o.mesesRenovacion MONTH) AS nuevaFechaRenovacion
+                FROM sclientfno AS t
+                LEFT JOIN sclien AS c ON c.codclien = t.codclien
+                LEFT JOIN stfnooperador AS o ON o.codoperador = t.operador
+                LEFT JOIN stfnomodel AS m ON m.codmodelo = t.modelo
+                WHERE  t.fecharenove >= NOW() ORDER BY 1, 2`
+            const [r] = await conn.query(sql)
+            await conn.end()
+            return r
+        } catch (error) {
+            if (conn) {
+                await conn.end()
+            }
+            throw (error)
+        }
     }
 }
 
