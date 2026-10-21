@@ -12,9 +12,18 @@ router.get('/test', async (req, res, next) => {
     }
 })
 
-router.get('/', async (req, res, next) => {
+router.get('/:empresa', async (req, res, next) => {
     try {
-        result = await clientes_mysql.todos_clientes()
+        result = await clientes_mysql.todos_clientes(req.params.empresa)
+        return res.json(result)
+    } catch (error) {
+        next(error)
+    }
+})
+
+router.get('/buscar/:empresa/:cadena', async (req, res, next) => {
+    try {
+        result = await clientes_mysql.buscar_clientes(req.params.empresa, req.params.cadena)
         return res.json(result)
     } catch (error) {
         next(error)

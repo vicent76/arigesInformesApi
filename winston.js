@@ -8,7 +8,7 @@ dotenv.config();
 // define the custom settings for each transport (file, console)
 var options = {
   file: {
-    level: process.env.RESERVTAXI_WINSTON_FILELEVEL || 'info',
+    level: process.env.ARAW_WINSTON_FILELEVEL || 'info',
     filename: `${appRoot}/logs/app.log`,
     handleExceptions: true,
     json: true,
@@ -17,7 +17,7 @@ var options = {
     colorize: false,
   },
   console: {
-    level: process.env.RESERVTAXI_WINSTON_CONSOLELEVEL || 'debug',
+    level: process.env.ARAW_WINSTON_CONSOLELEVEL || 'debug',
     handleExceptions: true,
     json: false,
     colorize: true,

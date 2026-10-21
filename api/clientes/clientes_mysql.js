@@ -5,12 +5,29 @@ const clientes_mysql = {
     test: async () => {
         return 'CLIENTES TEST'
     },
-    todos_clientes: async (data) => {
+    todos_clientes: async (empresa) => {
         let conn = undefined
         try {
-            let cfg = await connector.base()
+            let cfg = await connector.empresa(empresa)
             conn = await mysql.createConnection(cfg)
-            let sql = `select * from clientes`
+            let sql = `select * from sclien`
+            const [r] = await conn.query(sql)
+            await conn.end()
+            return r
+        } catch (error) {
+            if (conn) {
+                await conn.end()
+            }
+            throw (error)
+        }
+    },
+
+        buscar_clientes: async (empresa, cadena) => {
+        let conn = undefined
+        try {
+            let cfg = await connector.empresa(empresa)
+            conn = await mysql.createConnection(cfg)
+            let sql = `select * from sclien where nomclien like '%${cadena}%'`
             const [r] = await conn.query(sql)
             await conn.end()
             return r
@@ -61,7 +78,7 @@ const clientes_mysql = {
                 LEFT JOIN sclien AS c ON c.codclien = t.codclien
                 LEFT JOIN stfnooperador AS o ON o.codoperador = t.operador
                 LEFT JOIN stfnomodel AS m ON m.codmodelo = t.modelo
-                WHERE plazosorigen > 0 AND PlazosOrigen <> PlazosMeses ORDER BY 1, 2`
+                WHERE plazosorigen > 0 AND PlazosOrigen <> PlazosMeses ORDER BY 1, 3`
             const [r] = await conn.query(sql)
             await conn.end()
             return r
@@ -96,7 +113,7 @@ const clientes_mysql = {
                 LEFT JOIN sclien AS c ON c.codclien = t.codclien
                 LEFT JOIN stfnooperador AS o ON o.codoperador = t.operador
                 LEFT JOIN stfnomodel AS m ON m.codmodelo = t.modelo
-                WHERE  t.fecharenove >= NOW() ORDER BY 1, 2`
+                WHERE  t.fecharenove >= NOW() ORDER BY 1, 3`
             const [r] = await conn.query(sql)
             await conn.end()
             return r
