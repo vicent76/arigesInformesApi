@@ -22,12 +22,12 @@ const clientes_mysql = {
         }
     },
 
-        buscar_clientes: async (empresa, cadena) => {
+    buscar_clientes: async (empresa, cadena) => {
         let conn = undefined
         try {
             let cfg = await connector.empresa(empresa)
             conn = await mysql.createConnection(cfg)
-            let sql = `select * from sclien where nomclien like '%${cadena}%'`
+            let sql = `select codclien, nomclien from sclien where nomclien like '%${cadena}%'`
             const [r] = await conn.query(sql)
             await conn.end()
             return r
@@ -39,25 +39,41 @@ const clientes_mysql = {
         }
     },
 
-      cliente_codigo: async (codclien, empresa) => {
-        let conn = undefined
+    cliente_codigo: async (empresa, codclien) => {
+
+        let conn;
+
         try {
-            let cfg = await connector.empresa(empresa)
-            conn = await mysql.createConnection(cfg)
-             let sql = `SELECT * FROM sclien 
-            WHERE codclien = ${codclien}`
-            const [r] = await conn.query(sql)
-            if (r.length === 0) throw new Error("No existe el cliente")
-            await conn.end()
-            return r
-        } catch (error) {
-            if (conn) {
-                await conn.end()
+            const cfg = await connector.empresa(empresa);
+            conn = await mysql.createConnection(cfg);
+
+            const sql = `
+            SELECT *
+            FROM sclien
+            WHERE codclien = ?
+        `;
+
+            const [r] = await conn.query(sql, [codclien]);
+
+            
+            if (r.length === 0) {
+                const error = new Error('No existe el cliente');
+                error.status = 404;
+                throw error;
             }
-            throw (error)
+
+            return r[0];
+
+        } catch (error) {
+            throw error;
+
+        } finally {
+            if (conn) {
+                await conn.end();
+            }
         }
     },
-       todos_clientes_telefonos: async (empresa) => {
+    todos_clientes_telefonos: async (empresa) => {
         let conn = undefined
         try {
             let cfg = await connector.empresa(empresa)
@@ -90,7 +106,7 @@ const clientes_mysql = {
         }
     },
 
-     todos_clientes_telefonos_vencidos: async (empresa) => {
+    todos_clientes_telefonos_vencidos: async (empresa) => {
         let conn = undefined
         try {
             let cfg = await connector.empresa(empresa)
@@ -123,7 +139,40 @@ const clientes_mysql = {
             }
             throw (error)
         }
-    }
+    },
+
+    cliente_telefonos: async (empresa, codclien) => {
+        let conn = undefined
+        try {
+            let cfg = await connector.empresa(empresa)
+            conn = await mysql.createConnection(cfg)
+            let sql = `SELECT 
+                t.codclien,
+                c.nomclien,
+                t.IdTelefono,
+                t.Observaciones,
+                t.operador,
+                o.nombre AS operadorNombre,
+                t.modelo,
+                m.descripcion AS modeloNombre,
+                t.PlazosMeses,
+                t.ImportePlazo,
+                t.PlazosOrigen
+                FROM sclientfno AS t
+                LEFT JOIN sclien AS c ON c.codclien = t.codclien
+                LEFT JOIN stfnooperador AS o ON o.codoperador = t.operador
+                LEFT JOIN stfnomodel AS m ON m.codmodelo = t.modelo
+                WHERE t.codclien = ${codclien} ORDER BY 3`
+            const [r] = await conn.query(sql)
+            await conn.end()
+            return r
+        } catch (error) {
+            if (conn) {
+                await conn.end()
+            }
+            throw (error)
+        }
+    },
 }
 
 module.exports = clientes_mysql

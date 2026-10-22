@@ -14,7 +14,7 @@ router.get('/test', async (req, res, next) => {
 
 router.get('/:empresa', async (req, res, next) => {
     try {
-        result = await clientes_mysql.todos_clientes(req.params.empresa)
+        let result = await clientes_mysql.todos_clientes(req.params.empresa)
         return res.json(result)
     } catch (error) {
         next(error)
@@ -23,16 +23,16 @@ router.get('/:empresa', async (req, res, next) => {
 
 router.get('/buscar/:empresa/:cadena', async (req, res, next) => {
     try {
-        result = await clientes_mysql.buscar_clientes(req.params.empresa, req.params.cadena)
+        let result = await clientes_mysql.buscar_clientes(req.params.empresa, req.params.cadena)
         return res.json(result)
     } catch (error) {
         next(error)
     }
 })
 
-router.get('/codigo/:codclien/:empresa', async (req, res, next) => {
+router.get('/codigo/:empresa/:codclien', async (req, res, next) => {
     try {
-        result = await clientes_mysql.cliente_codigo(req.params.codclien, req.params.empresa)
+        let result = await clientes_mysql.cliente_codigo(req.params.empresa, req.params.codclien)
         return res.json(result)
     } catch (error) {
         next(error)
@@ -41,7 +41,7 @@ router.get('/codigo/:codclien/:empresa', async (req, res, next) => {
 
 router.get('/telefonos/:empresa', async (req, res, next) => {
     try {
-        result = await clientes_mysql.todos_clientes_telefonos(req.params.empresa)
+        let result = await clientes_mysql.todos_clientes_telefonos(req.params.empresa)
         return res.json(result)
     } catch (error) {
         next(error)
@@ -50,7 +50,16 @@ router.get('/telefonos/:empresa', async (req, res, next) => {
 
 router.get('/telefonos/vencidos/:empresa', async (req, res, next) => {
     try {
-        result = await clientes_mysql.todos_clientes_telefonos_vencidos(req.params.empresa)
+        let result = await clientes_mysql.todos_clientes_telefonos_vencidos(req.params.empresa)
+        return res.json(result)
+    } catch (error) {
+        next(error)
+    }
+})
+
+router.get('/telefonos/cliente/:empresa/:codclien', async (req, res, next) => {
+    try {
+        let result = await clientes_mysql.cliente_telefonos(req.params.empresa, req.params.codclien)
         return res.json(result)
     } catch (error) {
         next(error)
