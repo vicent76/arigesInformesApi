@@ -2,9 +2,9 @@ const mysql = require('mysql2/promise')
 const connector = require('../../lib/conector_mysql')
 const { error } = require('winston')
 
-const empresas_mysql = {
+const ofertas_mysql = {
     test: async () => {
-        return 'AGENTES TEST'
+        return 'OFERTAS TEST'
     },
     ofertas_cliente: async (codclien, empresa) => {
         let conn = undefined
@@ -21,8 +21,8 @@ const empresas_mysql = {
                     COALESCE(SUM(l.importel), 0) AS importe
                     FROM scapre c
                 INNER JOIN slipre AS l ON l.numofert = c.numofert
-                GROUP BY c.numofert  
-                WHERE c.codclien = ${codclien}`
+                WHERE c.codclien = ${codclien}
+                GROUP BY 1 `
             const [r] = await conn.query(sql)
             await conn.end()
             return r
@@ -35,4 +35,4 @@ const empresas_mysql = {
     }
 }
 
-module.exports = empresas_mysql
+module.exports = ofertas_mysql

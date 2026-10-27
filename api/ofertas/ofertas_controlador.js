@@ -12,9 +12,9 @@ router.get('/test', async (req, res, next) => {
     }
 })
 
-router.get('/:empresa/:codclien', async (req, res, next) => {
+router.get('/cliente/:empresa/:codclien', async (req, res, next) => {
     try {
-        let [result] = await ofertas_mysql.ofertas_cliente(req.params.codclien, req.params.empresa)
+        let result = await ofertas_mysql.ofertas_cliente(req.params.codclien, req.params.empresa)
         return res.json(result)
     } catch (error) {
         next(error)
